@@ -16,5 +16,17 @@ namespace ChuckNorrisFacts
         {
             InitializeComponent();
         }
+
+        private void GetFavoriteClicked(object sender, EventArgs e)
+        {
+        }
+
+        private void GetFactClicked(object sender, EventArgs e)
+        {
+        }
+
+        private void AddFavoriteClicked(object sender, EventArgs e)
+        {
+        }
     }
 }
