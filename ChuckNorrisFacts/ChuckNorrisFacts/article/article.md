@@ -153,9 +153,51 @@ namespace ChuckNorrisFacts
         public string url { get; set; }
         public string value { get; set; }
     }
-
 }
 ``
+
+Now we will add some Nuget packages to do REST calls and parse JSON.
+Go to the __Tools__ menu at the top bar of Visual Studio. Select
+__NuGet Package Manager__ and then __Manager NuGet Packages for Solution. 
+Install the following to NuGets into the main project, ChuckNorrisFacts: 
+`RestSharp` and `Newtonsoft.JSON`.
+
+Now we can finish `FactsView.xaml.cs`. Add these two using-statements
+at the top:
+
+```cs
+using Newtonsoft.Json;
+using RestSharp;
+```
+
+Add the two object variables from the code below - and also the initalization 
+code at the end of the constructor:
+
+```cs
+public partial class FactsView : ContentView
+{
+    private readonly List<string> _favorites = new List<string>();
+    private readonly RestClient _client = new RestClient("https://api.chucknorris.io");
+
+    public FactsView()
+    {
+        InitializeComponent();
+
+        var categoryList = new List<string> { "Random" };
+        categoryList.AddRange(GetCategories());
+        CategoryPicker.ItemsSource = categoryList;
+        CategoryPicker.SelectedIndex = 0;
+    }
+
+```
+
+The list is for saving your favorite Chuck Norris Facts in-memory. The `_client`
+is for an object that will help us to do REST calls. 
+
+In the constructor you set up the `Picker` with all the options. The first one
+is to have a random fact, and the rest are the categories you will fetch from 
+https://api.chucknorris.io/jokes/categories by a REST call. 
+
 
 
 
