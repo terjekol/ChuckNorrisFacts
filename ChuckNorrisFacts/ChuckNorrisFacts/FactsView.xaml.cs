@@ -25,24 +25,20 @@ namespace ChuckNorrisFacts
 
         private void GetFavoriteClicked(object sender, EventArgs e)
         {
-            FactLabel.Text = _favorites.Count == 0 ? "You have no favorites yet." : GetRandomFavorite();
+            FactLabel.Text = _favorites.Count == 0
+                ? "You have no favorites yet."
+                : _favorites[new Random().Next(0, _favorites.Count)];
         }
 
         private void GetFactClicked(object sender, EventArgs e)
         {
             var isRandom = CategoryPicker.SelectedIndex == 0;
             FactLabel.Text = GetFact(isRandom ? null : CategoryPicker.SelectedItem.ToString());
-
         }
 
         private void AddFavoriteClicked(object sender, EventArgs e)
         {
             _favorites.Add(FactLabel.Text);
-        }
-
-        private string GetRandomFavorite()
-        {
-            return _favorites[new Random().Next(0, _favorites.Count)];
         }
 
         public string GetFact(string category = null)

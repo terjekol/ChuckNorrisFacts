@@ -198,6 +198,73 @@ In the constructor you set up the `Picker` with all the options. The first one
 is to have a random fact, and the rest are the categories you will fetch from 
 https://api.chucknorris.io/jokes/categories by a REST call. 
 
+Next, fill `GetFactClicked` with this:
+```cs
+private void GetFactClicked(object sender, EventArgs e)
+{
+    var isRandom = CategoryPicker.SelectedIndex == 0;
+    FactLabel.Text = GetFact(isRandom ? null : CategoryPicker.SelectedItem.ToString());
+}
+```
+
+You will make a method `GetFact()` that can take a category name as parameter and get a fact 
+in that category - or get a random fact of no category is provided. 
+
+To make `GetFact()` and `GetCategories()` actually work, add this:
+
+```cs
+public string GetFact(string category = null)
+{
+    var url = "/jokes/random";
+    if (category != null) url += "?category=" + category;
+    var fact = Get<Fact>(url);
+    return fact?.value;
+}
+
+public string[] GetCategories()
+{
+    return Get<string[]>("/jokes/categories");
+}
+
+private T Get<T>(string url)
+{
+    var request = new RestRequest(url, Method.GET);
+    var response = _client.Execute(request);
+    return JsonConvert.DeserializeObject<T>(response.Content);
+}
+```
+
+The last one is a helper method which get an URL as parameter, does the REST call, 
+converts the result to datatype T. To make this as general as possible, you use _generics_, 
+thats the `<T>` in `Get<T>` and let's you call this method with whatever class you want. 
+
+`GetCategories()` simply calls the helper method with the correct URL ending - and asks for
+the results to be interpreted as a string array. 
+
+`GetFact()` does something simular. If a category is set, it adds it to the URL the way that
+the Chuck Norris API wants it. And is wants the result as an object of the class you made earlier, 
+`Fact`.
+
+The logic for favorites simply works with the in-memory list. Add their implementations:
+
+```cs
+private void GetFavoriteClicked(object sender, EventArgs e)
+{
+    FactLabel.Text = _favorites.Count == 0
+        ? "You have no favorites yet."
+        : _favorites[new Random().Next(0, _favorites.Count)];
+}
+
+private void AddFavoriteClicked(object sender, EventArgs e)
+{
+    _favorites.Add(FactLabel.Text);
+}
+```
+
+`AddFavoriteClicked()` will add the current fact to the favorites list. 
+`GetFavoriteClicked()` will show a random favorite, if not the list is empty, in which case
+it lets the user know there are no favorites yet. 
+
 
 
 
