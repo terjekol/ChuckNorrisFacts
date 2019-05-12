@@ -5,7 +5,7 @@ Let's use it to make a simple app that can fetch and remember other hopefully en
 Chuck Norris. 
 
 Start by downloading Visual Studio 2019 community edition fom 
-[visualstudio.microsoft.com](https://visualstudio.microsoft.com/).
+[__visualstudio.microsoft.com__](https://visualstudio.microsoft.com/).
 Make sure to check the box "Mobile development" during the installation process:
 
 ![](img/mobile_development.png)
@@ -23,7 +23,21 @@ Then check all platforms and select the template __Blank__:
 
 ![](img/project_template.png)
 
+Then you're in! Have a look around. The Solution Explorer on the right contains
+four projects:
+
 ![](img/solution_explorer.png)
+
+The first one is the only one we will work on. The others are for platform 
+specific code, and you may as well collapsed them as I have done in the image
+above. 
+
+Notice that the last project, ChuckNorrisFacts.UWP (Universal Windows) is in 
+bold text. This means that hitting F5 will run this as a Windows application. 
+If you want to run the Android or iOS versions, you must right-click the project
+you want and then select __Set as StartUp Project__. 
+
+
 
 
 
