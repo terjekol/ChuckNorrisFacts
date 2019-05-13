@@ -1,10 +1,20 @@
-﻿Chuck Norris could easily make an app that runs on iOS, Android, and Windows without any frameworks or tools, 
-but most of us could do with some help. Xamarin Forms is the perfect help for this - it enables apps
+﻿Chuck Norris could easily makes a single app run on every platform: 
+iOS, Android, and Windows - without any frameworks or tools. 
+Most others could do with some help. Xamarin Forms is a perfect help, and
+makes it a breeze to create an app! You can create an app
 for all three platforms from a single codebase. It comes free with 
 Visual Studio 2019 community edition from Microsoft. 
-Let's have some fun and use it to make a simple app that can amuse us with facts about Chuck Norris. 
+Let's try it out - and have some fun. You will use it to make a simple app that 
+can entertain with facts 
+about Chuck Norris. You will use these tools, libraries, and services:
 
-# Getting the tool
+- Visual Studio 2019 community edition
+- Xamarin.Forms
+- RestSharp - for REST calls from C#
+- Okta.Auth.Sdk - for authenticating users
+- Chuck Norris facts API at https://api.chucknorris.io/
+
+# Get the tool
 Start by downloading Visual Studio 2019 community edition from 
 [__visualstudio.microsoft.com__](https://visualstudio.microsoft.com/).
 Make sure to check the box "Mobile development" during the installation process:
