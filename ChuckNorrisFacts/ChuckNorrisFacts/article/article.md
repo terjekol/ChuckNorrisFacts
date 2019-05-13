@@ -14,7 +14,7 @@ will use these tools, libraries, and services:
 
 - Visual Studio 2019 community edition
 - Xamarin.Forms
-- RestSharp - for REST calls from C#
+- RestSharp - for REST calls 
 - Okta.Auth.Sdk - for authenticating users
 - Chuck Norris facts API at https://api.chucknorris.io/
 
