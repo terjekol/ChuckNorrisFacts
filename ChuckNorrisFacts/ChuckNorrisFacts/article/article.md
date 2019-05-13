@@ -1,12 +1,16 @@
-﻿Chuck Norris could easily makes a single app run on every platform: 
+﻿Chuck Norris could easily make a single app run on all of the platforms
 iOS, Android, and Windows - without any frameworks or tools. 
-Most others could do with some help. Xamarin Forms is a perfect help, and
-makes it a breeze to create an app! You can create an app
-for all three platforms from a single codebase. It comes free with 
+Most others could do with some help. 
+
+**Xamarin Forms** is a perfect help, and
+makes it a breeze to create an app! Your app will run
+on all the three platforms from a single codebase. Xamarin.Forms comes free with 
 Visual Studio 2019 community edition from Microsoft. 
-Let's try it out - and have some fun. You will use it to make a simple app that 
-can entertain with facts 
-about Chuck Norris. You will use these tools, libraries, and services:
+Let's try it out - and have some fun. Make a simple app that 
+fetches Chuck Norris facts and collects your favorites. 
+
+This article 
+will use these tools, libraries, and services:
 
 - Visual Studio 2019 community edition
 - Xamarin.Forms
