@@ -1,7 +1,7 @@
-﻿Chuck Norris could easily make an app that runs on iOS, Android and Windows without any frameworks or tools, 
+﻿Chuck Norris could easily make an app that runs on iOS, Android, and Windows without any frameworks or tools, 
 but most of us could do with some help. Xamarin Forms is the perfect help for this - it enables apps
-for all three platforms from a single codebase. It comes free with Visual Studio 2019 community edition 
-from Microsoft. 
+for all three platforms from a single codebase. It comes free with 
+Visual Studio 2019 community edition from Microsoft. 
 Let's have some fun and use it to make a simple app that can amuse us with facts about Chuck Norris. 
 
 # Getting the tool
@@ -35,8 +35,8 @@ The Solution Explorer on the right contains four projects:
 
 ![](img/solution_explorer.png)
 
-The first one is the only one you will work on. The others are for platform 
-specific code, and you may as well collapse them as I have done in the image
+The first one is the only one you will work on. The others are for 
+platform-specific code, and you may as well collapse them as I have done in the image
 above. 
 
 Notice that the last project, ChuckNorrisFacts.UWP (Universal Windows) is in 
@@ -44,7 +44,7 @@ bold text. This means that hitting F5 will run this as a Windows application.
 If you want to run the Android or iOS versions, you must right-click the project
 you want and then select __Set as StartUp Project__. 
 
-Let's build a user interface for getting Chuck Norris facts! Right click the project
+Let's build a user interface for getting Chuck Norris facts! Right-click the project
 __ChuckNorrisFacts__, select __Add__ and then __New Item...__.
 Select __Xamarin.Forms__ to the left and __Content View__ in the middle, 
 and enter "FactsView" in the Name-field:
@@ -80,9 +80,9 @@ Change the file's content to this:
 ```
 
 The content of this view is a `StackLayout`, which by default lays out its content
-from top to botton. In the first row is another `StackLayout` with 
+from top to bottom. In the first row is another `StackLayout` with 
 `Orientation="Horizontal"`, which means it lays out its content from left to right.
-Inside it there are a combobox (which is called `Picker` in Xamarin.Forms) and three
+Inside it, there are a combo box (which is called `Picker` in Xamarin.Forms) and three
 buttons. 
 
 The `x:Name` attribute gives a variable name to each component, which enables 
@@ -135,7 +135,7 @@ and you will get a random joke in JSON format.
 You need to build a model class to 
 parse this JSON. Let's do it the easy way. Copy the JSON of the random joke you got
 from the browser. Then add a new class, either by the shortcut **Shift+Alt+C**
- or by right clicking the project __ChuckNorrisFacts__, selecting  __Add__ and then 
+ or by right-clicking the project __ChuckNorrisFacts__, selecting  __Add__ and then 
 __New Item...__. Call the class `Fact`. Once it has been created, _delete_ the class
 and the using statements so you are left with only this:
 
@@ -178,7 +178,7 @@ using Newtonsoft.Json;
 using RestSharp;
 ```
 
-Add the two object variables from the code below - and also the initalization 
+Add the two object variables from the code below - and also the initialization 
 code at the end of the constructor:
 
 ```cs
@@ -216,7 +216,8 @@ private void GetFactClicked(object sender, EventArgs e)
 }
 ```
 
-You will make a method `GetFact()` that can take a category name as parameter and get a fact 
+You will make a method `GetFact()` that can take a category name as
+a parameter and get a fact 
 in that category - or get a random fact of no category is provided. 
 
 To make `GetFact()` and `GetCategories()` actually work, add this:
@@ -243,14 +244,14 @@ private T Get<T>(string url)
 }
 ```
 
-The last one is a helper method which gets an URL as parameter, does the REST call, 
+The last one is a helper method which gets a URL as a parameter, does the REST call, 
 converts the result to datatype `T`. To make this as general as possible, you use _generics_, 
-that's the `<T>` in `Get<T>` and it let's you call this method with whatever class you want. 
+that's the `<T>` in `Get<T>` and it lets you call this method with whatever class you want. 
 
 `GetCategories()` simply calls the helper method with the correct URL ending - and asks for
 the results to be interpreted as a string array. 
 
-`GetFact()` does something simular. If a category is set, it adds it to the URL the way that
+`GetFact()` does something similar. If a category is set, it adds it to the URL the way that
 the Chuck Norris API wants it. And it wants the result as an object of the class you made earlier, 
 `Fact`.
 
@@ -278,7 +279,7 @@ But wait - those buttons are disabled! Sure, you can enable them, but you don't 
 anything other than their own favorites. So you need a way to ensure that the user is who he or she
 claims to be.
 
-# Add autentication to your Xamarin.Forms app
+# Add authentication to your Xamarin.Forms app
 
 No reason to write the authentication yourself. 
 You can easily integrate Okta to handle the authentication for you and easily:
@@ -296,7 +297,7 @@ Once you have signed up and logged in, you’ll be taken to your dashboard. Make
 ![](img/dashboard.png)
 
 Then install the `Okta.Auth.Sdk` NuGet package, and create a new login 
-component.  Right click the project __ChuckNorrisFacts__, select __Add__ and then __New Item...__.
+component.  Right-click the project __ChuckNorrisFacts__, select __Add__ and then __New Item...__.
 Select __Xamarin.Forms__ to the left and __Content View__ in the middle, 
 and enter "LoginView" in the Name-field. Click __Add__.
 
@@ -324,10 +325,10 @@ Open `LoginView.xaml` and change its content to this:
 </ContentView>
 ```
 
-So you have made a login panel and a logout panel. Only one of them will be visible at a time. 
-The login panel has two textboxes for email and password. `Entry` is textbox in Xamarin.Forms.
+So you have made a log in panel and a log out panel. Only one of them will be visible at a time. 
+The log in panel has two textboxes for email and password. `Entry` is a textbox in Xamarin.Forms.
 You have also made one button for logging in, one for signing up and a label to show a message
-if the login fails. The logout panel only shows a label and a button to log out.
+if the login fails. The log out panel only shows a label and a button to log out.
 
 You will make `LoginView` fire an event when the user has logged in. `FactsView` will listen to 
 and react to this event. Open `LoginViw.xaml.cs` and add the following line to the class:
@@ -365,7 +366,7 @@ private async void LoginClicked(object sender, EventArgs e)
 
 It calls another method `Login()` to do the authentication, sending it the email address
 and password that the user has entered. It fires an event, which we will later 
-work on in  `FactsView`. On success it shows the logout panel and hides the login panel. If the login
+work on in  `FactsView`. On success, it shows the log out panel and hides the log in panel. If the login
 fails it shows an error message. 
 
 Now add the method `Login()` which does the authentication:
@@ -389,11 +390,10 @@ public static async Task<bool> Login(string email, string password)
 }
 ```
 
-This method simply sends the username and password to Okta for authentication. In th first line, make sure the property `OktaDomain` is set to the value in your dashboard
+This method simply sends the username and password to Okta for authentication. In the first line, make sure the property `OktaDomain` is set to the value in your dashboard
 when logged in to the okta web site. 
 
- o actually test 
-this, you must add a user. Select **Users** > **People** from the Okta web dashboard and then
+To actually test this, you must add a user. Select **Users** > **People** from the Okta web dashboard and then
 **Add Person**. Okta also provides a separate sign up page for you. It has the URL 
 `yourOktaDomain/signin/register`. In the app, the sign up button will open a browser with
 this URL. Add the method below:
@@ -405,7 +405,7 @@ private void SignupClicked(object sender, EventArgs e)
 }
 ```
 
-Also add a method to handle logout:
+Also, add a method to handle log out:
 
 ```cs
 private void LogoutClicked(object sender, EventArgs e)
@@ -416,7 +416,7 @@ private void LogoutClicked(object sender, EventArgs e)
 }
 ```
 
-It hides the logout panel, shows the login panel and fires the event. 
+It hides the log out panel, shows the log in panel and fires the event. 
 
 # Send notifications from one view to another
 
@@ -451,4 +451,4 @@ public void HandleLoginChanged(bool isLoggedIn)
 
 It will enable or disable to favorite buttons depending on if you are logged in or not. 
 
-Now run the app with ctrl-F5 or F5 and start collection your favorite Chuck Norris Facts!
+Now run the app with ctrl-F5 or F5 and start collecting your favorite Chuck Norris Facts!
