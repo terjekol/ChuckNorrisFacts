@@ -60,5 +60,10 @@ namespace ChuckNorrisFacts
             var response = _client.Execute(request);
             return JsonConvert.DeserializeObject<T>(response.Content);
         }
+
+        public void HandleLoginChanged(bool isLoggedIn)
+        {
+            AddFavoriteButton.IsEnabled = GetFavoriteButton.IsEnabled = isLoggedIn;
+        }
     }
 }

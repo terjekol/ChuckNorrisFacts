@@ -17,5 +17,10 @@ namespace ChuckNorrisFacts
         {
             InitializeComponent();
         }
+
+        private void HandleLoginChanged(object sender, bool isLoggedIn)
+        {
+            FactsView.HandleLoginChanged(isLoggedIn);
+        }
     }
 }

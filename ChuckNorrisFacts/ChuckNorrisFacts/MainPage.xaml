@@ -5,11 +5,8 @@
              x:Class="ChuckNorrisFacts.MainPage">
 
     <StackLayout>
-        <!-- Place new controls here -->
-        <local:FactsView></local:FactsView>
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+        <local:FactsView x:Name="FactsView"></local:FactsView>
+        <local:LoginView x:Name="LoginView" LoginChanged="HandleLoginChanged"></local:LoginView>
     </StackLayout>
 
 </ContentPage>

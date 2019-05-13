@@ -33,7 +33,7 @@ The Solution Explorer on the right contains four projects:
 
 ![](img/solution_explorer.png)
 
-The first one is the only one we will work on. The others are for platform 
+The first one is the only one you will work on. The others are for platform 
 specific code, and you may as well collapsed them as I have done in the image
 above. 
 
@@ -87,13 +87,12 @@ The `Clicked` attribute names which method in the code behind file is to be call
 then the button is clicked. The attribute `Text` specifies the text to be shown on the 
 button. 
 
-The to last buttons are disbled, because we want to reserve this functionality to
-users who have logged in. More about that later. 
+The to last buttons are disbled, more about that later. 
 
 It is always wise to often test that you have done everything right. To actually
 see our FactsVie, open `MainPage.xaml` and add `<local:FactsView></local:FactsView>`
  right after the comment `<!-- Place new controls here -->`. Also, to make it 
-build without errors, we need to add the click-handlers. Open `FactsView.xaml.cs`
+build without errors, you need to add the click-handlers. Open `FactsView.xaml.cs`
 and add this to the class:
 
 ```cs
@@ -122,7 +121,7 @@ run your app without debug mode and without this debug tool.
 
 Next up is actually getting some Chuck Norris Facts! That's where Chuck Norris facts
 JSON API at https://api.chucknorris.io/ comes in handy. Go to https://api.chucknorris.io/jokes/random
-and you will get a random joke in JSON format. We need to build a model class to 
+and you will get a random joke in JSON format. You need to build a model class to 
 parse this JSON. Let's do it the easy way. Copy the JSON of the random joke you got
 from the browser. Then add a new class, either by the shortcut Shift+Alt+C or
 by right clicking the project__ChuckNorrisFacts__, selecting  __Add__ and then 
@@ -156,13 +155,13 @@ namespace ChuckNorrisFacts
 }
 ``
 
-Now we will add some Nuget packages to do REST calls and parse JSON.
+Now you will add some Nuget packages to do REST calls and parse JSON.
 Go to the __Tools__ menu at the top bar of Visual Studio. Select
 __NuGet Package Manager__ and then __Manager NuGet Packages for Solution. 
 Install the following to NuGets into the main project, ChuckNorrisFacts: 
 `RestSharp` and `Newtonsoft.JSON`.
 
-Now we can finish `FactsView.xaml.cs`. Add these two using-statements
+Now you can finish `FactsView.xaml.cs`. Add these two using-statements
 at the top:
 
 ```cs
@@ -265,7 +264,173 @@ private void AddFavoriteClicked(object sender, EventArgs e)
 `GetFavoriteClicked()` will show a random favorite, if not the list is empty, in which case
 it lets the user know there are no favorites yet. 
 
+But wait - those buttons are disabled! Sure, you can enable them, but you don't want users to see
+anything other than their own favorites. So you need a way to ensure that the user is who he or she
+claims to be.
 
+No reason to write this yourself. You can easily integrate Okta to handle the authentication for you and easily:
 
+ - [Authenticate](https://developer.okta.com/product/authentication/) and 
+   [authorize](https://developer.okta.com/product/authorization/)  your users
+ - Store data about your users
+ - Perform password-based and [social login](https://developer.okta.com/authentication-guide/social-login/)
+ - Secure your application with [multi-factor authentication](https://developer.okta.com/use_cases/mfa/)
+ - And much more! Check out our [product documentation](https://developer.okta.com/documentation/)
+ - Sign up for a [forever-free developer account](https://developer.okta.com/signup/) (or log in if you already have one).
+ 
+Once you have signed up and logged in, you’ll be taken to your dashboard. Make note of your Org URL in the top right corner.
 
+![](img/dashboard.png)
 
+Then install the Okta.Auth.Sdk NuGet package, and create a new login component.  
+Right click the project
+__ChuckNorrisFacts__, select __Add__ and then __New Item...___.
+Select __Xamarin.Forms__ to the left and __Content View__ in the middle, 
+and enter "LoginView" in the Name-field. Click __Add__.
+
+Open `LoginView.xaml` and change its content to this:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChuckNorrisFacts.LoginView">
+    <ContentView.Content>
+        <StackLayout>
+            <StackLayout x:Name="LoginPanel">
+                <Entry x:Name="EmailEntry" Placeholder="Email" ></Entry>
+                <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" ></Entry>
+                <Button Clicked="LoginClicked" Text="Login"></Button>
+                <Button Clicked="SignupClicked" Text="Signup"></Button>
+                <Label x:Name="ErrorLabel" TextColor="#FF0000"></Label>
+            </StackLayout>
+            <StackLayout x:Name="LogoutPanel" IsVisible="False" Orientation="Horizontal">
+                <Label Text="You are logged in." ></Label>
+                <Button Clicked="LogoutClicked" Text="Logout"></Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
+```
+
+So you have made a login panel and a logout panel. Only one of them will be visible at a time. 
+The login panel has two textboxes for email and password. `Entry` is textbox in Xamarin.Forms.
+You have also made one button for logging in, one for signing up and a label to show a message
+if the login fails. The logout panel only shows a label and a button to log out.
+
+You will make `LoginView` emit an event when the user has logged in. `FactsView` will listen to 
+and react to this event. Open `LoginViw.xaml.cs` and add the following line to the class:
+
+```cs
+public event EventHandler<bool> LoginChanged;
+```
+
+At the top you need to add these two using statements:
+
+```cs
+using Okta.Auth.Sdk;
+using Okta.Sdk.Abstractions.Configuration;
+``` 
+
+Then add this method to handle a click on the login button:
+
+```cs
+private async void LoginClicked(object sender, EventArgs e)
+{
+    var success = await Login(EmailEntry.Text, PasswordEntry.Text);
+    if (LoginChanged != null) LoginChanged(this, success);
+    if (success)
+    {
+        LoginPanel.IsVisible = false;
+        LogoutPanel.IsVisible = true;
+        ErrorLabel.Text = "";
+    }
+    else
+    {
+        ErrorLabel.Text = "Login failed.";
+    }
+}
+```
+
+It calls another method `Login()` to do the authentication, sending it the email address
+and password that the user has entered. It emits an event, which we will later work on in  
+`FactsView`. On success it shows the logout panel and hides the login panel. If the login
+fails it shows an error message. Now add the method `Login()` which does the authentication:
+
+```cs
+public static async Task<bool> Login(string email, string password)
+{
+    var config = new OktaClientConfiguration { OktaDomain = "yourOktaDomain", };
+    var authClient = new AuthenticationClient(config);
+
+    var authnOptions = new AuthenticateOptions { Username = email, Password = password };
+    try
+    {
+        var authnResponse = await authClient.AuthenticateAsync(authnOptions);
+        return authnResponse.AuthenticationStatus == AuthenticationStatus.Success;
+    }
+    catch
+    {
+        return false;
+    }
+}
+```
+
+In th first line, make sure the property `OktaDomain` is set to the value in your dashboard
+when logged in to the okta web site. 
+
+This method simply sends the username and password to Okta for authentication. To actually test 
+this, you must add a user. Select **Users** > **People** from the Okta dashboard and then
+**Add Person**. Okta also provides a separate sign up page for you. It has the URL 
+`yourOktaDomain/signin/register`. In the app, the sign up button will open a browser with
+this URL. Add the method below:
+
+```cs
+private void SignupClicked(object sender, EventArgs e)
+{
+    Device.OpenUri(new Uri("yourOktaDomain/signin/register"));
+}
+```
+
+Also add a method to handle logout:
+
+```cs
+private void LogoutClicked(object sender, EventArgs e)
+{
+    LoginPanel.IsVisible = true;
+    LogoutPanel.IsVisible = false;
+    if (LoginChanged != null) LoginChanged(this, false);
+}
+```
+
+It hides the logout panel, shows the login panel and fires the event. 
+
+To show `LoginView` and make the event work, open `MainPage.xaml` and
+change the content of the `StackLayout` to thi:
+
+```xml
+<local:FactsView x:Name="FactsView"></local:FactsView>
+<local:LoginView x:Name="LoginView" LoginChanged="HandleLoginChanged"></local:LoginView>
+```
+
+So you will have both a `FactsView` and a `LoginView` on the main page. The event
+will be handled by a method `HandleLoginChanged`. Open `MainPage.xaml.cs` and
+add this:
+
+```cs
+private void HandleLoginChanged(object sender, bool isLoggedIn)
+{
+    FactsView.HandleLoginChanged(isLoggedIn);
+}
+```
+
+When the event occurs this code just passes it on to `FactsView`. Open `FactsView.xaml.cs`
+and add this: 
+
+```cs
+public void HandleLoginChanged(bool isLoggedIn)
+{
+    AddFavoriteButton.IsEnabled = GetFavoriteButton.IsEnabled = isLoggedIn;
+}
+```
+
+It will enable or disable to favorite buttons depending on if you are logged in or not. 
