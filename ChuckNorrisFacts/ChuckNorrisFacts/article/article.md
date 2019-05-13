@@ -1,10 +1,11 @@
 ﻿Chuck Norris could easily make an app that runs on iOS, Android and Windows without any frameworks or tools, 
-but most of us others wouldn't do without. Xamarin Forms is such a great tools exactly enabling a single codebase
-running on all three platforms. It comes free with Visual Studio 2019 community edition from Microsoft. 
-Let's use it to make a simple app that can fetch and remember other hopefully entertaining facts about
-Chuck Norris. 
+but most of us could do with some help. Xamarin Forms is the perfect help for this - it enables apps
+for all three platforms from a single codebase. It comes free with Visual Studio 2019 community edition 
+from Microsoft. 
+Let's have some fun and use it to make a simple app that can amuse us with facts about Chuck Norris. 
 
-Start by downloading Visual Studio 2019 community edition fom 
+# Getting the tool
+Start by downloading Visual Studio 2019 community edition from 
 [__visualstudio.microsoft.com__](https://visualstudio.microsoft.com/).
 Make sure to check the box "Mobile development" during the installation process:
 
@@ -17,6 +18,7 @@ You may also use Visual Studio 2017, but I would be wise to update it - to make 
 you have the last version of Xamarin.Forms. To update, start the Visual Studio 
 installer and select Update if that is an option. 
 
+# Start making your app
 Start Visual Studio, select __Create a new project__, and select the template __Mobile App (Xamarin.Forms)__:
 
 ![](img/create_new_project.png)
@@ -89,6 +91,8 @@ button.
 
 The to last buttons are disbled, more about that later. 
 
+# Run the first version of your app
+
 It is always wise to often test that you have done everything right. To actually
 see our FactsVie, open `MainPage.xaml` and add `<local:FactsView></local:FactsView>`
  right after the comment `<!-- Place new controls here -->`. Also, to make it 
@@ -118,6 +122,8 @@ When started, it should look like this:
 The black thing, in the center almost at the top, is a debug tool. Click on it
 and it will expand. If you run with ctrl+F5 instead of only F5, Visual Studio will
 run your app without debug mode and without this debug tool. 
+
+# Make a REST call
 
 Next up is actually getting some Chuck Norris Facts! That's where Chuck Norris facts
 JSON API at https://api.chucknorris.io/ comes in handy. Go to https://api.chucknorris.io/jokes/random
@@ -268,7 +274,10 @@ But wait - those buttons are disabled! Sure, you can enable them, but you don't 
 anything other than their own favorites. So you need a way to ensure that the user is who he or she
 claims to be.
 
-No reason to write this yourself. You can easily integrate Okta to handle the authentication for you and easily:
+# Add autentication to your Xamarin.Forms app
+
+No reason to write the authentication yourself. 
+You can easily integrate Okta to handle the authentication for you and easily:
 
  - [Authenticate](https://developer.okta.com/product/authentication/) and 
    [authorize](https://developer.okta.com/product/authorization/)  your users
@@ -404,8 +413,10 @@ private void LogoutClicked(object sender, EventArgs e)
 
 It hides the logout panel, shows the login panel and fires the event. 
 
+# Send notifications from one view to another
+
 To show `LoginView` and make the event work, open `MainPage.xaml` and
-change the content of the `StackLayout` to thi:
+change the content of the `StackLayout` to this:
 
 ```xml
 <local:FactsView x:Name="FactsView"></local:FactsView>
@@ -434,3 +445,5 @@ public void HandleLoginChanged(bool isLoggedIn)
 ```
 
 It will enable or disable to favorite buttons depending on if you are logged in or not. 
+
+Now run the app with ctrl-F5 or F5 and start collection your favorite Chuck Norris Facts!
