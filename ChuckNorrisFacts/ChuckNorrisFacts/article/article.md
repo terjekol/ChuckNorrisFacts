@@ -14,8 +14,8 @@ Make sure to check the box "Mobile development" during the installation process:
 If you forget, no problem! Just open "Visual Studio Installer" from your start menu, select __Modify__ and
 then you are back at the screen where you can tick off "Mobile development".
 
-You may also use Visual Studio 2017, but I would be wise to update it - to make sure
-you have the last version of Xamarin.Forms. To update, start the Visual Studio 
+You may also use Visual Studio 2017, but it would be wise to update it - to make sure
+you have the latest version of Xamarin.Forms. Start the Visual Studio 
 installer and select Update if that is an option. 
 
 # Start making your app
@@ -36,7 +36,7 @@ The Solution Explorer on the right contains four projects:
 ![](img/solution_explorer.png)
 
 The first one is the only one you will work on. The others are for platform 
-specific code, and you may as well collapsed them as I have done in the image
+specific code, and you may as well collapse them as I have done in the image
 above. 
 
 Notice that the last project, ChuckNorrisFacts.UWP (Universal Windows) is in 
@@ -44,16 +44,17 @@ bold text. This means that hitting F5 will run this as a Windows application.
 If you want to run the Android or iOS versions, you must right-click the project
 you want and then select __Set as StartUp Project__. 
 
-Let's build a user interface for getting facts. Right click the project
-__ChuckNorrisFacts__, select __Add__ and then __New Item...___.
+Let's build a user interface for getting Chuck Norris facts! Right click the project
+__ChuckNorrisFacts__, select __Add__ and then __New Item...__.
 Select __Xamarin.Forms__ to the left and __Content View__ in the middle, 
 and enter "FactsView" in the Name-field:
 
 ![](img/new_item.png)
 
-Click __Add__, and a two new files will be created. FactsView.xaml is the view part
-of the component, declaring which components are included and their visual appearence,
-including layout. FactsView.xaml.cs is for C# and is called the code behind file. 
+Click __Add__, and two new files will be created. `FactsView.xaml` is the view part
+of the component, declaring which components are included and their visual 
+appearance,
+including layout. `FactsView.xaml.cs` is for C# and is called the _code behind file_. 
 
 Change the file's content to this:
 
@@ -67,8 +68,10 @@ Change the file's content to this:
             <StackLayout Orientation="Horizontal">
                 <Picker x:Name="CategoryPicker"></Picker>
                 <Button x:Name="GetFactButton" Clicked="GetFactClicked" Text="Get fact"></Button>
-                <Button x:Name="GetFavoriteButton" Clicked="GetFavoriteClicked" Text="Get random favorite" IsEnabled="False"></Button>
-                <Button x:Name="AddFavoriteButton" Clicked="AddFavoriteClicked" Text="Add to favorites" IsEnabled="False"></Button>
+                <Button x:Name="GetFavoriteButton" Clicked="GetFavoriteClicked" 
+                          Text="Get random favorite" IsEnabled="False"></Button>
+                <Button x:Name="AddFavoriteButton" Clicked="AddFavoriteClicked" 
+                          Text="Add to favorites" IsEnabled="False"></Button>
             </StackLayout>
             <Label x:Name="FactLabel"/>
         </StackLayout>
@@ -76,28 +79,28 @@ Change the file's content to this:
 </ContentView>
 ```
 
-The content of this view is a `StackLayout`, which by defaut lays out its content
+The content of this view is a `StackLayout`, which by default lays out its content
 from top to botton. In the first row is another `StackLayout` with 
-`Orientation="Horizontal"`, which means it lay out its content from left to right.
+`Orientation="Horizontal"`, which means it lays out its content from left to right.
 Inside it there are a combobox (which is called `Picker` in Xamarin.Forms) and three
 buttons. 
 
-The `x:Name` attribute gives a variable name to each component. This enables you
-to access them in th code behind file. You will see that soon. 
+The `x:Name` attribute gives a variable name to each component, which enables 
+you to access them in the code behind file. You will see that soon. 
 
-The `Clicked` attribute names which method in the code behind file is to be called
-then the button is clicked. The attribute `Text` specifies the text to be shown on the 
+The `Clicked` attribute tells which method be called
+when the button is clicked. The attribute `Text` specifies the text on the 
 button. 
 
-The to last buttons are disbled, more about that later. 
+The two last buttons are disabled, more about that later. 
 
 # Run the first version of your app
 
-It is always wise to often test that you have done everything right. To actually
-see our FactsVie, open `MainPage.xaml` and add `<local:FactsView></local:FactsView>`
+It is always wise to often test that everything is right. To actually
+see our `FactsView`, open `MainPage.xaml` and add `<local:FactsView></local:FactsView>`
  right after the comment `<!-- Place new controls here -->`. Also, to make it 
 build without errors, you need to add the click-handlers. Open `FactsView.xaml.cs`
-and add this to the class:
+and add these methods to the class - we will finish them later:
 
 ```cs
 private void GetFavoriteClicked(object sender, EventArgs e)
@@ -115,23 +118,25 @@ private void AddFavoriteClicked(object sender, EventArgs e)
 
 Now you can press F5, and Visual Studio will
 build your solution and run it. Building it takes a while the first time.
-When started, it should look like this:
+When started, it should look something like this:
 
 ![](img/app1.png)
 
-The black thing, in the center almost at the top, is a debug tool. Click on it
-and it will expand. If you run with ctrl+F5 instead of only F5, Visual Studio will
+The black thing in the center almost at the top is a debug tool. Click on it
+to expand it. If you run with ctrl+F5 instead of only F5, Visual Studio will
 run your app without debug mode and without this debug tool. 
 
 # Make a REST call
 
 Next up is actually getting some Chuck Norris Facts! That's where Chuck Norris facts
 JSON API at https://api.chucknorris.io/ comes in handy. Go to https://api.chucknorris.io/jokes/random
-and you will get a random joke in JSON format. You need to build a model class to 
+and you will get a random joke in JSON format. 
+
+You need to build a model class to 
 parse this JSON. Let's do it the easy way. Copy the JSON of the random joke you got
-from the browser. Then add a new class, either by the shortcut Shift+Alt+C or
-by right clicking the project__ChuckNorrisFacts__, selecting  __Add__ and then 
-__New Item...___. Call the class `Fact`. Once it has been created, the class
+from the browser. Then add a new class, either by the shortcut **Shift+Alt+C**
+ or by right clicking the project __ChuckNorrisFacts__, selecting  __Add__ and then 
+__New Item...__. Call the class `Fact`. Once it has been created, _delete_ the class
 and the using statements so you are left with only this:
 
 
@@ -139,13 +144,12 @@ and the using statements so you are left with only this:
 namespace ChuckNorrisFacts
 {
 }
-``
+```
 
-Place the cursor in between the curly braces and go to the __Edit__ menu in the 
-
+Place the cursor between the curly braces and go to the __Edit__ menu in the 
 top bar of Visual Studio. Select __Paste Special__ and then __Paste JSON as Classes__.
 Visual Studio creates all the properties for you! 
-Change the name of the class to `Fact`, and it should now look like this:
+Change the name of the class back to `Fact`, and it should now look like this:
 
 ```cs
 namespace ChuckNorrisFacts
@@ -159,13 +163,12 @@ namespace ChuckNorrisFacts
         public string value { get; set; }
     }
 }
-``
+```
 
-Now you will add some Nuget packages to do REST calls and parse JSON.
+Now you will add some NuGet packages to do REST calls and parse JSON.
 Go to the __Tools__ menu at the top bar of Visual Studio. Select
-__NuGet Package Manager__ and then __Manager NuGet Packages for Solution. 
-Install the following to NuGets into the main project, ChuckNorrisFacts: 
-`RestSharp` and `Newtonsoft.JSON`.
+__NuGet Package Manager__ and then __Manager NuGet Packages for Solution__. 
+Install `RestSharp` and `Newtonsoft.JSON` into the main project, ChuckNorrisFacts.
 
 Now you can finish `FactsView.xaml.cs`. Add these two using-statements
 at the top:
@@ -196,14 +199,15 @@ public partial class FactsView : ContentView
 
 ```
 
-The list is for saving your favorite Chuck Norris Facts in-memory. The `_client`
-is for an object that will help us to do REST calls. 
+The list is for saving your favorite Chuck Norris Facts in-memory, and
+`_client` is for an object that will help us to do REST calls. 
 
-In the constructor you set up the `Picker` with all the options. The first one
+In the constructor add options to the `Picker`. The first option
 is to have a random fact, and the rest are the categories you will fetch from 
-https://api.chucknorris.io/jokes/categories by a REST call. 
+https://api.chucknorris.io/jokes/categories with a REST call. 
 
 Next, fill `GetFactClicked` with this:
+
 ```cs
 private void GetFactClicked(object sender, EventArgs e)
 {
@@ -239,15 +243,15 @@ private T Get<T>(string url)
 }
 ```
 
-The last one is a helper method which get an URL as parameter, does the REST call, 
-converts the result to datatype T. To make this as general as possible, you use _generics_, 
-thats the `<T>` in `Get<T>` and let's you call this method with whatever class you want. 
+The last one is a helper method which gets an URL as parameter, does the REST call, 
+converts the result to datatype `T`. To make this as general as possible, you use _generics_, 
+that's the `<T>` in `Get<T>` and it let's you call this method with whatever class you want. 
 
 `GetCategories()` simply calls the helper method with the correct URL ending - and asks for
 the results to be interpreted as a string array. 
 
 `GetFact()` does something simular. If a category is set, it adds it to the URL the way that
-the Chuck Norris API wants it. And is wants the result as an object of the class you made earlier, 
+the Chuck Norris API wants it. And it wants the result as an object of the class you made earlier, 
 `Fact`.
 
 The logic for favorites simply works with the in-memory list. Add their implementations:
@@ -291,9 +295,8 @@ Once you have signed up and logged in, you’ll be taken to your dashboard. Make
 
 ![](img/dashboard.png)
 
-Then install the Okta.Auth.Sdk NuGet package, and create a new login component.  
-Right click the project
-__ChuckNorrisFacts__, select __Add__ and then __New Item...___.
+Then install the `Okta.Auth.Sdk` NuGet package, and create a new login 
+component.  Right click the project __ChuckNorrisFacts__, select __Add__ and then __New Item...__.
 Select __Xamarin.Forms__ to the left and __Content View__ in the middle, 
 and enter "LoginView" in the Name-field. Click __Add__.
 
@@ -326,7 +329,7 @@ The login panel has two textboxes for email and password. `Entry` is textbox in 
 You have also made one button for logging in, one for signing up and a label to show a message
 if the login fails. The logout panel only shows a label and a button to log out.
 
-You will make `LoginView` emit an event when the user has logged in. `FactsView` will listen to 
+You will make `LoginView` fire an event when the user has logged in. `FactsView` will listen to 
 and react to this event. Open `LoginViw.xaml.cs` and add the following line to the class:
 
 ```cs
@@ -361,9 +364,11 @@ private async void LoginClicked(object sender, EventArgs e)
 ```
 
 It calls another method `Login()` to do the authentication, sending it the email address
-and password that the user has entered. It emits an event, which we will later work on in  
-`FactsView`. On success it shows the logout panel and hides the login panel. If the login
-fails it shows an error message. Now add the method `Login()` which does the authentication:
+and password that the user has entered. It fires an event, which we will later 
+work on in  `FactsView`. On success it shows the logout panel and hides the login panel. If the login
+fails it shows an error message. 
+
+Now add the method `Login()` which does the authentication:
 
 ```cs
 public static async Task<bool> Login(string email, string password)
@@ -384,11 +389,11 @@ public static async Task<bool> Login(string email, string password)
 }
 ```
 
-In th first line, make sure the property `OktaDomain` is set to the value in your dashboard
+This method simply sends the username and password to Okta for authentication. In th first line, make sure the property `OktaDomain` is set to the value in your dashboard
 when logged in to the okta web site. 
 
-This method simply sends the username and password to Okta for authentication. To actually test 
-this, you must add a user. Select **Users** > **People** from the Okta dashboard and then
+ o actually test 
+this, you must add a user. Select **Users** > **People** from the Okta web dashboard and then
 **Add Person**. Okta also provides a separate sign up page for you. It has the URL 
 `yourOktaDomain/signin/register`. In the app, the sign up button will open a browser with
 this URL. Add the method below:
@@ -423,7 +428,7 @@ change the content of the `StackLayout` to this:
 <local:LoginView x:Name="LoginView" LoginChanged="HandleLoginChanged"></local:LoginView>
 ```
 
-So you will have both a `FactsView` and a `LoginView` on the main page. The event
+The main page will have both a `FactsView` and a `LoginView`. The event
 will be handled by a method `HandleLoginChanged`. Open `MainPage.xaml.cs` and
 add this:
 
