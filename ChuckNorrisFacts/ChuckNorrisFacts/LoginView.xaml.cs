@@ -24,15 +24,18 @@ namespace ChuckNorrisFacts
         {
             var loginProvider = DependencyService.Get<ILoginProvider>();
             var idToken = await loginProvider.LoginAsync();
-            var success = idToken != null;
 
-            var jwtHandler = new JwtSecurityTokenHandler();
-            var token = jwtHandler.ReadJwtToken(idToken);
-            var userName = token.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
+            string userName = null;
+            if (idToken != null)
+            {
+                var jwtHandler = new JwtSecurityTokenHandler();
+                var token = jwtHandler.ReadJwtToken(idToken);
+                userName = token.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
+            }
 
             if (LoginChanged != null) LoginChanged(this, userName);
 
-            if (!success)
+            if (userName == null)
             {
                 ErrorLabel.Text = "Login failed.";
                 return;
