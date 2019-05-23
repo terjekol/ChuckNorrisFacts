@@ -4,6 +4,6 @@ namespace ChuckNorrisFacts
 {
     public interface ILoginProvider
     {
-        Task<AuthInfo> LoginAsync();
+        Task<string> LoginAsync();
     }
 }

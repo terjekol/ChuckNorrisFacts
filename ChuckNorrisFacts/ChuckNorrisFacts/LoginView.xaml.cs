@@ -20,9 +20,8 @@ namespace ChuckNorrisFacts
         private async void LoginClicked(object sender, EventArgs e)
         {
             var loginProvider = DependencyService.Get<ILoginProvider>();
-            var authInfo = await loginProvider.LoginAsync();
-
-            var success = string.IsNullOrWhiteSpace(authInfo.AccessToken) || authInfo.IsAuthorized;
+            var accessToken = await loginProvider.LoginAsync();
+            var success = accessToken != null;
 
             if (LoginChanged != null) LoginChanged(this, success);
             if (!success)
@@ -34,16 +33,6 @@ namespace ChuckNorrisFacts
             LoginPanel.IsVisible = false;
             LogoutPanel.IsVisible = true;
             ErrorLabel.Text = "";
-
-            //TODO: Save the access and refresh tokens somewhere secure
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadJwtToken(authInfo.IdToken);
-            var claims = jsonToken?.Payload?.Claims;
-
-            var name = claims?.FirstOrDefault(x => x.Type == "name")?.Value;
-            var email = claims?.FirstOrDefault(x => x.Type == "email")?.Value;
-            var preferredUsername = claims?
-                .FirstOrDefault(x => x.Type == "preferred_username")?.Value;
         }
 
         private void SignupClicked(object sender, EventArgs e)

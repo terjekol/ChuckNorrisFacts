@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Windows.Data.Json;
 using Windows.Security.Authentication.Web;
 using Windows.Security.Cryptography;
@@ -18,57 +19,36 @@ namespace ChuckNorrisFacts.UWP
 {
     class LoginProvider : ILoginProvider
     {
-        public async Task<AuthInfo> LoginAsync()
+        public async Task<string> LoginAsync()
         {
-            // Generates state and PKCE values.
-            string state = randomDataBase64url(32);
-            string code_verifier = randomDataBase64url(32);
-            string code_challenge = base64urlencodeNoPadding(sha256(code_verifier));
-            const string code_challenge_method = "S256";
+            string state = GetBase64UrlData(32);
+            string nonce = GetBase64UrlData(12);
+            string codeVerifier = GetBase64UrlData(32);
+            var tmp = CryptographicBuffer.ConvertStringToBinary(codeVerifier, BinaryStringEncoding.Utf8);
+            var codeVerifierBuffer = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256).HashData(tmp);
+            string code_challenge = GetBase64UrlData(null, codeVerifierBuffer);
 
+            var callbackUri = WebAuthenticationBroker.GetCurrentApplicationCallbackUri();
+            var absoluteUri = callbackUri.AbsoluteUri;
+            var callback = Uri.EscapeDataString(absoluteUri);
+
+            var url = "https://dev-660868.okta.com/oauth2/default/v1/authorize";
             // Creates the OAuth 2.0 authorization request.
-            string authorizationRequest = string.Format("{0}?response_type=code&scope=openid%20profile&redirect_uri={1}&client_id={2}&state={3}",
-                Constants.OrgUrl,
-                System.Uri.EscapeDataString(Constants.RedirectUri),
+            string authorizationRequest = string.Format(
+                "{0}?response_type=token id_token&scope=openid&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method=S256&nonce={5}",
+                url,
+                callback,
                 Constants.ClientId,
-                state);
+                state,
+                code_challenge,
+                nonce);
 
 
             var result = await WebAuthenticationBroker.AuthenticateAsync(
-                WebAuthenticationOptions.UseTitle,
-                new Uri(authorizationRequest));
-            switch (result.ResponseStatus)
-            {
-                case WebAuthenticationStatus.Success:
-                    string data = result.ResponseData;
-                    // Strip authentication result from data and process rest of encoded data.
-                    break;
-
-                case WebAuthenticationStatus.ErrorHttp:
-                    break;
-
-                case WebAuthenticationStatus.UserCancel:
-                    break;
-            }
-
-            return new AuthInfo();
-        }
-
-        /// <summary>
-        /// Appends the given string to the on-screen log, and the debug console.
-        /// </summary>
-        /// <param name="output">string to be appended</param>
-
-
-        /// <summary>
-        /// Returns URI-safe data with a given input length.
-        /// </summary>
-        /// <param name="length">Input length (nb. output will be longer)</param>
-        /// <returns></returns>
-        public static string randomDataBase64url(uint length)
-        {
-            IBuffer buffer = CryptographicBuffer.GenerateRandom(length);
-            return base64urlencodeNoPadding(buffer);
+                WebAuthenticationOptions.None,
+                new Uri(authorizationRequest), new Uri(absoluteUri));
+            if (result.ResponseStatus != WebAuthenticationStatus.Success) return null;
+            return HttpUtility.ParseQueryString(result.ResponseData)["access_token"];
         }
 
         /// <summary>
@@ -78,27 +58,18 @@ namespace ChuckNorrisFacts.UWP
         /// <returns></returns>
         public static IBuffer sha256(string inputString)
         {
-            HashAlgorithmProvider sha = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256);
-            IBuffer buff = CryptographicBuffer.ConvertStringToBinary(inputString, BinaryStringEncoding.Utf8);
+            var sha = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Sha256);
+            var buff = CryptographicBuffer.ConvertStringToBinary(inputString, BinaryStringEncoding.Utf8);
             return sha.HashData(buff);
         }
 
-        /// <summary>
-        /// Base64url no-padding encodes the given input buffer.
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public static string base64urlencodeNoPadding(IBuffer buffer)
+        public static string GetBase64UrlData(uint? length = null, IBuffer buffer = null)
         {
-            string base64 = CryptographicBuffer.EncodeToBase64String(buffer);
-
-            // Converts base64 to base64url.
-            base64 = base64.Replace("+", "-");
-            base64 = base64.Replace("/", "_");
-            // Strips padding.
-            base64 = base64.Replace("=", "");
-
-            return base64;
+            if (length != null) buffer = CryptographicBuffer.GenerateRandom(length.Value);
+            return CryptographicBuffer.EncodeToBase64String(buffer)
+                .Replace("+", "-")
+                .Replace("/", "_")
+                .Replace("=", "");
         }
     }
 }

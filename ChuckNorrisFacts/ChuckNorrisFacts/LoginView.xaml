@@ -5,8 +5,6 @@
     <ContentView.Content>
         <StackLayout>
             <StackLayout x:Name="LoginPanel">
-                <Entry x:Name="EmailEntry" Placeholder="Email" ></Entry>
-                <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" ></Entry>
                 <Button Clicked="LoginClicked" Text="Login"></Button>
                 <Button Clicked="SignupClicked" Text="Signup"></Button>
                 <Label x:Name="ErrorLabel" TextColor="#FF0000"></Label>
