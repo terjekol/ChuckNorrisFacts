@@ -66,6 +66,7 @@ namespace ChuckNorrisFacts
 
         public void HandleLoginChanged(string userName)
         {
+            FactLabel.Text = "";
             bool isLoggedIn = userName != null;
             AddFavoriteButton.IsEnabled = GetFavoriteButton.IsEnabled = isLoggedIn;
             _userName = isLoggedIn ? userName : null;
