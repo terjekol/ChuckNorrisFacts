@@ -20,8 +20,8 @@ namespace ChuckNorrisFacts
         private async void LoginClicked(object sender, EventArgs e)
         {
             var loginProvider = DependencyService.Get<ILoginProvider>();
-            var accessToken = await loginProvider.LoginAsync();
-            var success = accessToken != null;
+            var idToken = await loginProvider.LoginAsync();
+            var success = idToken != null;
 
             if (LoginChanged != null) LoginChanged(this, success);
             if (!success)
