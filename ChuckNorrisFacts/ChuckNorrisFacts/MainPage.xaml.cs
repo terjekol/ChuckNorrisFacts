@@ -18,9 +18,9 @@ namespace ChuckNorrisFacts
             InitializeComponent();
         }
 
-        private void HandleLoginChanged(object sender, bool isLoggedIn)
+        private void HandleLoginChanged(object sender, string loggedInUserName)
         {
-            FactsView.HandleLoginChanged(isLoggedIn);
+            FactsView.HandleLoginChanged(loggedInUserName);
         }
     }
 }

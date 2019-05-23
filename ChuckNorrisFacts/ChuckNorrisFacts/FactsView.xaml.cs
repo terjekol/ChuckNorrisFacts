@@ -10,8 +10,10 @@ namespace ChuckNorrisFacts
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FactsView : ContentView
     {
-        private readonly List<string> _favorites = new List<string>();
+        private readonly Dictionary<string, List<string>> _userFavorites;
         private readonly RestClient _client = new RestClient("https://api.chucknorris.io");
+        private string _userName;
+        private List<string> Favorites => _userFavorites[_userName];
 
         public FactsView()
         {
@@ -21,13 +23,14 @@ namespace ChuckNorrisFacts
             categoryList.AddRange(GetCategories());
             CategoryPicker.ItemsSource = categoryList;
             CategoryPicker.SelectedIndex = 0;
+            _userFavorites = new Dictionary<string, List<string>>();
         }
 
         private void GetFavoriteClicked(object sender, EventArgs e)
         {
-            FactLabel.Text = _favorites.Count == 0
+            FactLabel.Text = Favorites.Count == 0
                 ? "You have no favorites yet."
-                : _favorites[new Random().Next(0, _favorites.Count)];
+                : Favorites[new Random().Next(0, Favorites.Count)];
         }
 
         private void GetFactClicked(object sender, EventArgs e)
@@ -38,7 +41,7 @@ namespace ChuckNorrisFacts
 
         private void AddFavoriteClicked(object sender, EventArgs e)
         {
-            _favorites.Add(FactLabel.Text);
+            Favorites.Add(FactLabel.Text);
         }
 
         public string GetFact(string category = null)
@@ -61,9 +64,13 @@ namespace ChuckNorrisFacts
             return JsonConvert.DeserializeObject<T>(response.Content);
         }
 
-        public void HandleLoginChanged(bool isLoggedIn)
+        public void HandleLoginChanged(string userName)
         {
+            bool isLoggedIn = userName != null;
             AddFavoriteButton.IsEnabled = GetFavoriteButton.IsEnabled = isLoggedIn;
+            _userName = isLoggedIn ? userName : null;
+            if (userName != null && !_userFavorites.ContainsKey(userName))
+                _userFavorites.Add(userName, new List<string>());
         }
     }
 }

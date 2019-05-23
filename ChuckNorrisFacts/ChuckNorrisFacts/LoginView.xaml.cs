@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,7 +18,7 @@ namespace ChuckNorrisFacts
             InitializeComponent();
         }
 
-        public event EventHandler<bool> LoginChanged;
+        public event EventHandler<string> LoginChanged;
 
         private async void LoginClicked(object sender, EventArgs e)
         {
@@ -23,7 +26,12 @@ namespace ChuckNorrisFacts
             var idToken = await loginProvider.LoginAsync();
             var success = idToken != null;
 
-            if (LoginChanged != null) LoginChanged(this, success);
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var token = jwtHandler.ReadJwtToken(idToken);
+            var userName = token.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
+
+            if (LoginChanged != null) LoginChanged(this, userName);
+
             if (!success)
             {
                 ErrorLabel.Text = "Login failed.";
@@ -33,6 +41,7 @@ namespace ChuckNorrisFacts
             LoginPanel.IsVisible = false;
             LogoutPanel.IsVisible = true;
             ErrorLabel.Text = "";
+            LoggedInLabel.Text = "You are logged in as " + userName;
         }
 
         private void SignupClicked(object sender, EventArgs e)
@@ -44,7 +53,7 @@ namespace ChuckNorrisFacts
         {
             LoginPanel.IsVisible = true;
             LogoutPanel.IsVisible = false;
-            if (LoginChanged != null) LoginChanged(this, false);
+            if (LoginChanged != null) LoginChanged(this, null);
         }
     }
 }

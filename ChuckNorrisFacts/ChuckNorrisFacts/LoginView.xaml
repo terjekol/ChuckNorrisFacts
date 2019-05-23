@@ -10,7 +10,7 @@
                 <Label x:Name="ErrorLabel" TextColor="#FF0000"></Label>
             </StackLayout>
             <StackLayout x:Name="LogoutPanel" IsVisible="False" Orientation="Horizontal">
-                <Label Text="You are logged in." ></Label>
+                <Label x:Name="LoggedInLabel" ></Label>
                 <Button Clicked="LogoutClicked" Text="Logout"></Button>
             </StackLayout>
         </StackLayout>
