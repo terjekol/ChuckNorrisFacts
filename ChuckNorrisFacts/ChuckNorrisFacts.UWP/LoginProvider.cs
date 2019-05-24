@@ -15,7 +15,7 @@ namespace ChuckNorrisFacts.UWP
     {
         public async Task<string> LoginAsync()
         {
-            var clientId = "0oamfrj31sVs13hyx356";
+            var clientId = "0oamyzfedGrFCiXqs356";
             var url = "https://dev-660868.okta.com/oauth2/default/v1/authorize";
             var state = GetBase64UrlData(32);
             var nonce = GetBase64UrlData(12);
@@ -27,7 +27,7 @@ namespace ChuckNorrisFacts.UWP
             var absoluteUri = WebAuthenticationBroker.GetCurrentApplicationCallbackUri().AbsoluteUri;
             var callback = Uri.EscapeDataString(absoluteUri);
 
-            string authorizationRequest = string.Format(
+            var authorizationRequest = string.Format(
                 "{0}?response_type=id_token&scope=openid profile&redirect_uri={1}&client_id={2}&state={3}&code_challenge={4}&code_challenge_method=S256&nonce={5}",
                 url, callback, clientId, state, codeChallenge, nonce);
 
