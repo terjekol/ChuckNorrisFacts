@@ -26,12 +26,12 @@ namespace ChuckNorrisFacts
             _userFavorites = new Dictionary<string, List<string>>();
         }
 
-        private void GetFavoriteClicked(object sender, EventArgs e)
-        {
-            FactLabel.Text = Favorites.Count == 0
-                ? "You have no favorites yet."
-                : Favorites[new Random().Next(0, Favorites.Count)];
-        }
+private void GetFavoriteClicked(object sender, EventArgs e)
+{
+    FactLabel.Text = Favorites.Count == 0
+        ? "You have no favorites yet."
+        : Favorites[new Random().Next(0, Favorites.Count)];
+}
 
         private void GetFactClicked(object sender, EventArgs e)
         {
